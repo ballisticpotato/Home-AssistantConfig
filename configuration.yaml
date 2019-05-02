@@ -1,0 +1,174 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret homeassistant_latitude
+  longitude: !secret homeassistant_longitude
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: !secret homeassistant_elevation
+  # metric for Metric, imperial for Imperial
+  unit_system: !secret homeassistant_unit_system
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: !secret homeassistant_time_zone
+  # Customization file
+  customize: !include customize.yaml
+
+# Show links to resources in log and frontend
+#introduction:
+
+# Enables the frontend
+frontend:
+
+# Enables configuration UI
+config:
+
+http:
+  # Secrets are defined in the file secrets.yaml
+  ip_ban_enabled: True
+  login_attempts_threshold: 5
+  # Uncomment this if you are using SSL/TLS, running in Docker container, etc
+  #base_url: !secret http_base_url
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  include_used_components: true
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time
+history:
+
+# View all events in a logbook
+logbook:
+
+# Enables a map showing the location of tracked devices
+map:
+
+# Track the sun
+sun:
+
+# System Health
+system_health:
+
+# Sensors prediction
+sensor:
+  - platform: yr
+    name: Weather
+    monitored_conditions:
+      - symbol
+      - temperature
+      - humidity
+  - platform: systemmonitor
+    resources:
+      - type: processor_use
+      - type: load_5m
+      - type: memory_use_percent
+      - type: swap_use_percent
+      - type: disk_use_percent
+        arg: /
+      - type: last_boot
+  - platform: uptime
+    name: Uptime
+    unit_of_measurement: hours  
+
+# Text to speech
+tts:
+  - platform: google
+
+# Cloud
+cloud:
+
+# Device Tracking
+device_tracker:
+  - platform: netgear
+    host: !secret device_tracker_netgear_host
+    username: !secret device_tracker_netgear_username
+    password: !secret device_tracker_netgear_password
+    interval_seconds: 15
+    consider_home: 300
+    new_device_defaults:
+        hide_if_away: true
+        track_new_devices: false
+  - platform: bluetooth_tracker
+
+#Setup so we can track location beyond the house
+mqtt:
+  broker: !secret mqtt_broker
+  port: !secret mqtt_port
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  certificate: auto
+
+#Set Zones for tracking
+zone:
+  - name: Home
+    latitude: !secret homeassistant_latitude
+    longitude: !secret homeassistant_longitude
+    radius: 100
+  - name: !secret zone_work_name
+    latitude: !secret zone_work_latitude
+    longitude: !secret zone_work_longitude
+    radius: 100
+  - name: !secret zone_gym_name
+    latitude: !secret zone_gym_latitude
+    longitude: !secret zone_gym_longitude
+    radius: 100    
+
+
+#Use person to account for people in household
+person:
+
+#Notification Platform
+notify:
+#  - name: pushbullet
+#    platform: pushbullet
+#    api_key: !secret pushbulletapikey
+
+#Adds support for running Python scripts
+python_script:
+
+
+#Wemo
+wemo:
+
+light:
+  - platform: group
+    name: Wes' Room Light
+    entities:
+      - light.light
+      - light.light_2
+  - platform: group
+    name: Jerry's Floor Lamp
+    entities:
+      - light.jerry_lamp_1
+      - light.jerry_lamp_2
+      - light.jerry_lamp_3
+  - platform: group
+    name: Jerry's Bathroom Lights
+    entities:
+      - light.jerry_bathroom_1
+      - light.jerry_bathroom_2
+  - platform: group
+    name: Jerry's Lights
+    entities:
+      - light.jerry_s_bathroom_lights
+      - light.jerry_color
+      - light.jerry_s_floor_lamp
+      - light.jerry_bedside
+
+#configuration for owntracks
+owntracks:
+  max_gps_accuracy: 200
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml

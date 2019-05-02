@@ -1,0 +1,7 @@
+roommates:
+  name: Roommates
+  entities:
+    - person.jerry_2
+    - person.adam_2
+    - person.michael_2
+    - person.wes_2

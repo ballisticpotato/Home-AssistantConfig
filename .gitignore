@@ -1,0 +1,21 @@
+# Whitelisted Files
+!*.yaml
+!*.gitignore
+!*.md
+
+# Ignore Folders
+.storage
+
+# Ignored Secrets
+ip_bans.yaml
+secrets.yaml
+known_devices.yaml
+
+# Ignore Unique Identifier File
+.uuid
+
+# Ignore Logs
+*.log
+
+# Ignore the SQLite Database
+*.db

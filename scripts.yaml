@@ -1,0 +1,42 @@
+notify_change_presence:
+  alias: Notify Change of Presence
+  sequence:
+  - service: notify.pushbullet
+    data_template:
+      message: '{{friendly_name}}{% if to_state == "home" %} came home.{% else %}
+        left home.{% endif %} {%- for device in states.device_tracker -%} {% if friendly_name
+        != device.attributes.friendly_name %} {{device.attributes.friendly_name}}
+        is {% if device.state == "home" %}home.{% else %}not home.{% endif %}{% endif
+        %}{% endfor %}
+
+        '
+  - delay:
+      minutes: 5
+turn_off_all_jerrys_lights:
+  alias: Turn Off Jerry's Lights
+  sequence:
+  - service: light.turn_off
+    data:
+      entity_id:
+      - light.jerry_s_bathroom_lights
+      - light.jerry_s_floor_lamp
+      - light.jerry_color
+      - light.jerry_bedside
+'1553316503556':
+  alias: Set Lights Cool White
+  sequence:
+  - data:
+      kelvin: 4000
+    service: python_script.manual_flux
+'1553316906138':
+  alias: Set Lights Soft White
+  sequence:
+  - data:
+      kelvin: 2700
+    service: python_script.manual_flux
+'1553316940657':
+  alias: Set Lights Warm Glow
+  sequence:
+  - data:
+      kelvin: 2200
+    service: python_script.manual_flux

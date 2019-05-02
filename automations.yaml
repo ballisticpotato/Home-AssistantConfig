@@ -90,10 +90,14 @@
 - id: manual_flux
   alias: Manual Flux
   trigger:
-    - platform: sun
-      event: sunset
-    - platform: sun
-      event: sunrise
+    - platform: numeric_state
+      entity_id: sun.sun
+      value_template: '{{ state.attributes.elevation }}'
+      above: 6
+    - platform: numeric_state
+      entity_id: sun.sun
+      value_template: '{{ state.attributes.elevation }}'
+      below: 6
     - platform: time
       at: '22:00:00'
     - platform: time

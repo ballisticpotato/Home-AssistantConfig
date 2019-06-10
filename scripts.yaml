@@ -13,30 +13,40 @@ notify_change_presence:
   - delay:
       minutes: 5
 turn_off_all_jerrys_lights:
-  alias: Turn Off Jerry's Lights
+  alias: Lights Off
   sequence:
   - service: light.turn_off
+    data:
+      entity_id: light.jerry_s_lights
+leave_home:
+  alias: Leave Home
+  sequence:
+  - service: light.turn_off
+    data:
+      entity_id: light.jerry_s_lights
+  - service: switch.turn_off
+    data:
+      entity_id: switch.jerrys_switch
+bedtime_routine:
+  alias: Good Night
+  sequence:
+  - service: light.turn_on
+    data:
+      entity_id:
+      - light.jerry_s_floor_lamp
+      - light.jerry_s_bathroom_lights
+      brightness: 1
+  - service: light.turn_off
+    data:
+      entity_id: light.jerry_s_lights
+wake_up_routine:
+  alias: Good Morning
+  sequence:
+  - service: light.turn_on
     data:
       entity_id:
       - light.jerry_s_bathroom_lights
       - light.jerry_s_floor_lamp
-      - light.jerry_color
-      - light.jerry_bedside
-'1553316503556':
-  alias: Set Lights Cool White
-  sequence:
-  - data:
-      kelvin: 4000
-    service: python_script.manual_flux
-'1553316906138':
-  alias: Set Lights Soft White
-  sequence:
-  - data:
-      kelvin: 2700
-    service: python_script.manual_flux
-'1553316940657':
-  alias: Set Lights Warm Glow
-  sequence:
-  - data:
-      kelvin: 2200
-    service: python_script.manual_flux
+      brightness: 25
+    
+

@@ -1,52 +1,31 @@
-notify_change_presence:
-  alias: Notify Change of Presence
+'1579219741495':
+  alias: Eat and Watch TV
   sequence:
-  - service: notify.pushbullet
-    data_template:
-      message: '{{friendly_name}}{% if to_state == "home" %} came home.{% else %}
-        left home.{% endif %} {%- for device in states.device_tracker -%} {% if friendly_name
-        != device.attributes.friendly_name %} {{device.attributes.friendly_name}}
-        is {% if device.state == "home" %}home.{% else %}not home.{% endif %}{% endif
-        %}{% endfor %}
-
-        '
-  - delay:
-      minutes: 5
-turn_off_all_jerrys_lights:
-  alias: Lights Off
+  - data:
+      broadcast_address: 192.168.1.151
+      mac: d4:3d:7e:bd:f2:07
+    service: wake_on_lan.send_magic_packet
+  - entity_id: media_player.lg_tv
+    service: media_player.turn_on
+  - data: {}
+    entity_id: switch.tradfri_outlet
+    service: switch.turn_off
+  - data: {}
+    entity_id: automation.manual_flux
+    service: automation.turn_off
+  - data:
+      brightness: 5
+    entity_id: light.dining_area_lights
+    service: light.turn_on
+  - entity_id: automation.manual_flux
+    service: automation.turn_on
+'1581047036822':
+  alias: Quiet TV
   sequence:
-  - service: light.turn_off
-    data:
-      entity_id: light.jerry_s_lights
-leave_home:
-  alias: Leave Home
-  sequence:
-  - service: light.turn_off
-    data:
-      entity_id: light.jerry_s_lights
-  - service: switch.turn_off
-    data:
-      entity_id: switch.jerrys_switch
-bedtime_routine:
-  alias: Good Night
-  sequence:
-  - service: light.turn_on
-    data:
-      entity_id:
-      - light.jerry_s_floor_lamp
-      - light.jerry_s_bathroom_lights
-      brightness: 1
-  - service: light.turn_off
-    data:
-      entity_id: light.jerry_s_lights
-wake_up_routine:
-  alias: Good Morning
-  sequence:
-  - service: light.turn_on
-    data:
-      entity_id:
-      - light.jerry_s_bathroom_lights
-      - light.jerry_s_floor_lamp
-      brightness: 25
-    
-
+  - condition: state
+    entity_id: media_player.lg_tv
+    state: '''on'''
+  - data:
+      volume_level: 0.05
+    entity_id: media_player.lg_tv
+    service: media_player.volume_set

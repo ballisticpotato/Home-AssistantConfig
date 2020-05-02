@@ -1,114 +1,209 @@
-#- id: detect_presence_change
-#  alias: Detect Change of Presence
-#  trigger:
-#  - entity_id: device_tracker.404e36834b54,device_tracker.68ef4339078e,device_tracker.6c4d7365ea91,device_tracker.c0eefbf5049c
-#    platform: state
-#  condition:
-#  - after: 08:00:00
-#    before: 00:00:00
-#    condition: time
-#  action:
-#    service: script.turn_on
-#    entity_id: script.notify_change_presence
-#    data_template:
-#      variables:
-#        to_state: >
-#          {{trigger.to_state.state}}
-#        friendly_name: >
-#          {{trigger.to_state.attributes.friendly_name}}
-#  initial_state: false
-#  hide_entity: true
-
-#- id: keep_electric_blanket_warm
-#  alias: Keep Electric Blanket Warm
-#  trigger:
-#    platform: time
-#    minutes: '51'
-#    seconds: '00'
-#  action:
-#    - service: switch.turn_off
-#      entity_id: switch.jerry_lamp
-#    - delay: 00:00:05
-#    - service: switch.turn_on
-#      entity_id: switch.jerry_lamp
-
 - id: bedtime
   alias: Bedtime Lights
   trigger:
+  - at: '21:30:00'
     platform: time
-    at: '23:30:00'
   condition:
-    - condition: state
-      entity_id: 'person.jerry_2'
-      state: 'home'
-    - condition: time
-      weekday:
-        - sun
-        - mon
-        - tue
-        - wed
-        - thu
+  - condition: time
+    weekday:
+    - sun
+    - mon
+    - tue
+    - wed
+    - thu
   action:
-    - service: light.turn_off
-      data:
-        entity_id: light.jerry_s_floor_lamp
-    - service: light.turn_on
-      data:
-        entity_id: light.jerry_color
-        brightness_pct: 100
-        rgb_color: [255, 0, 0]
-    - service: light.turn_on
-      data:
-        entity_id: light.jerry_bedside
-        brightness_pct: 5
-        kelvin: 2200
+  - data:
+      entity_id:
+      - switch.tradfri_outlet
+      - switch.tradfri_outlet_2
+    service: switch.turn_off
+  - data:
+      entity_id: light.dining_area_lights
+    service: light.turn_off
+  - delay: 00:00:01
+  - service: light.turn_on
+    data:
+      entity_id: light.bathroom_lights
+  - delay: 00:00:01
+  - service: light.turn_on
+    data:
+      entity_id: light.bedroom_lamp
+  - service: light.turn_on
+    data:
+      brightness_pct: 5
+      entity_id: light.color_1
+      rgb_color:
+      - 255
+      - 0
+      - 0
+  - data: {}
+    entity_id: script.1581047036822
+    service: script.turn_on
 
-- id: jerryleft
-  alias: Jerry Away
+- id: wakeup
+  alias: Wakeup Lights
   trigger:
-    - platform: state
-      entity_id: person.jerry_2
-      from: 'home'
-    - platform: zone
-      entity_id: person.jerry_2
-      zone: zone.Home
-      event: leave
+    platform: time
+    at: 06:01:00
+  condition:
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
   action:
-    - service: script.turn_on
-      entity_id: script.turn_off_all_jerrys_lights
-    - service: switch.turn_off
-      entity_id: switch.jerrys_switch
-
+  - service: automation.turn_off
+    entity_id: automation.manual_flux
+  - delay: 00:00:01
+  - service: python_script.manual_flux
+    data:
+      light: light.jerry_floor_1
+      brightness_pct: 5
+  - service: python_script.manual_flux
+    data:
+      light: light.bathroom_lights
+      brightness_pct: 25
+  - service: python_script.manual_flux
+    data:
+      light: light.color_1
+      brightness_pct: 100
+  - delay: 00:01:00
+  - service: python_script.manual_flux
+    data:
+      light: light.jerry_floor_2
+      brightness_pct: 5
+  - delay: 00:01:00
+  - service: python_script.manual_flux
+    data:
+      light: light.jerry_floor_3
+      brightness_pct: 5
+  - delay: 00:01:00
+  - service: python_script.manual_flux
+    data:
+      light: light.jerry_floor_4
+      brightness_pct: 5
+  - delay: 00:01:00
+  - service: python_script.manual_flux
+    data:
+      light: light.jerry_floor_5
+      brightness_pct: 5
+  - service: python_script.fade_light
+    data:
+      entity_id: light.bedroom_lamp
+      transition: 600
+      brightness_pct: 100
+  - service: automation.turn_on
+    entity_id: automation.manual_flux
+- id: fake_home
+  alias: Fake at Home
+  trigger:
+  - platform: state
+    entity_id: person.jerry_lin
+    from: home
+  - platform: zone
+    entity_id: person.jerry_lin
+    zone: zone.Home
+    event: leave
+  - platform: time
+    at: '9:00:00'
+  - platform: time
+    at: '22:30:00'
+  action:
+  - service: automation.turn_off
+    entity_id: automation.leave_home
+  - service: light.turn_off
+    entity_id: group.all_lights
+  - service: switch.turn_off
+    entity_id: group.all_switches
+- id: leave_home
+  alias: Leave Home
+  trigger:
+  - platform: state
+    entity_id: person.jerry_lin
+    from: home
+  - platform: zone
+    entity_id: person.jerry_lin
+    zone: zone.Home
+    event: leave
+  - platform: time
+    at: '9:00:00'
+  action:
+  - service: light.turn_off
+    entity_id: group.all_lights
+  - service: switch.turn_off
+    entity_id: group.all_switches
 - id: autorestart
   alias: Automatic Reboot
   trigger:
-    - platform: time
-      at: "04:00:00"
+  - platform: time
+    at: 04:00:00
+  - platform: time
+    at: '16:00:00'
   action:
-    - service: homeassistant.restart
-
+  - service: homeassistant.restart
 - id: manual_flux
   alias: Manual Flux
   trigger:
-    - platform: numeric_state
-      entity_id: sun.sun
-      value_template: '{{ state.attributes.elevation }}'
-      above: 6
-    - platform: numeric_state
-      entity_id: sun.sun
-      value_template: '{{ state.attributes.elevation }}'
-      below: 6
-    - platform: time
-      at: '22:00:00'
-    - platform: time
-      at: '5:00:00'
-    - platform: state
-      entity_id: light.jerry_s_bathroom_lights, light.jerry_bedside, light.jerry_s_floor_lamp
-      from: 'off'
-      to: 'on'
-  condition:
-    - condition: state
-      entity_id: 'person.jerry_2'
-      state: 'home'
+  - platform: numeric_state
+    entity_id: sun.sun
+    value_template: '{{ state.attributes.elevation }}'
+    above: -3
+  - platform: numeric_state
+    entity_id: sun.sun
+    value_template: '{{ state.attributes.elevation }}'
+    below: -3
+  - platform: time
+    at: '21:30:00'
+  - platform: time
+    at: '5:00:00'
+  - platform: template
+    value_template: '{{ states(''sensor.time'') == (state_attr(''input_datetime.daylight_start_override'',
+      ''timestamp'') | int | timestamp_custom(''%H:%M'', False)) }}'
+  - platform: template
+    value_template: '{{ states(''sensor.time'') == (state_attr(''input_datetime.daylight_end_override'',
+      ''timestamp'') | int | timestamp_custom(''%H:%M'', False)) }}'
+  - platform: state
+    entity_id: light.bathroom_lights, light.bedroom_lamp, light.dining_area_lights,
+      light.color_1
+    from: 'off'
+    to: 'on'
   action:
-    - service: python_script.manual_flux
+  - service: python_script.manual_flux
+    data_template:
+      light: '{{ trigger.entity_id }}'
+- id: plant_light_on
+  alias: Plant Light On
+  trigger:
+  - platform: time
+    at: '9:00:00'
+  action:
+  - service: switch.turn_on
+    entity_id: switch.plant_light
+- id: plant_light_off
+  alias: Plant Light Off
+  trigger:
+  - platform: time
+    at: '17:00:00'
+  action:
+  - service: switch.turn_off
+    entity_id: switch.plant_light
+- id: night_light
+  alias: Night Light
+  trigger:
+  - platform: time
+    at: '22:00:00'
+  condition:
+  - condition: time
+    weekday:
+    - sun
+    - mon
+    - tue
+    - wed
+    - thu
+  - condition: state
+    entity_id: light.bedroom_lamp
+    state: 'on'
+  action:
+  - service: python_script.night_light

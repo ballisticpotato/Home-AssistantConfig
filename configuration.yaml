@@ -10,56 +10,29 @@ homeassistant:
   unit_system: !secret homeassistant_unit_system
   # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
   time_zone: !secret homeassistant_time_zone
-  # Customization file
   customize: !include customize.yaml
 
-# Show links to resources in log and frontend
-#introduction:
-
-# Enables the frontend
 frontend:
 
-# Enables configuration UI
 config:
 
-http:
-  # Secrets are defined in the file secrets.yaml
-  ip_ban_enabled: True
-  login_attempts_threshold: 5
-  # Uncomment this if you are using SSL/TLS, running in Docker container, etc
-  #base_url: !secret http_base_url
-
-# Checks for available updates
-# Note: This component will send some information about your system to
-# the developers to assist with development of Home Assistant.
-# For more information, please see:
-# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
 updater:
-  # Optional, allows Home Assistant developers to focus on popular components.
   include_used_components: true
 
-# Discover some devices automatically
 discovery:
 
-# Allows you to issue voice commands from the frontend in enabled browsers
-conversation:
-
-# Enables support for tracking state changes over time
 history:
 
-# View all events in a logbook
 logbook:
 
-# Enables a map showing the location of tracked devices
 map:
 
-# Track the sun
 sun:
 
-# System Health
 system_health:
 
-# Sensors prediction
+wake_on_lan:
+
 sensor:
   - platform: yr
     name: Weather
@@ -78,96 +51,95 @@ sensor:
       - type: last_boot
   - platform: uptime
     name: Uptime
-    unit_of_measurement: hours  
+    unit_of_measurement: hours
+  - platform: time_date
+    display_options:
+      - 'time'
+      - 'date'
+      - 'date_time_iso'
 
-# Text to speech
-tts:
-  - platform: google
+asuswrt:
+    host: 192.168.1.70
+    username: !secret router_username
+    ssh_key: /config/.ssh/asuswrt
 
-# Cloud
+device_tracker:
+    - platform: asuswrt
+      new_device_defaults:
+        track_new_devices: false
+
 cloud:
 
-# Device Tracking
-device_tracker:
-  - platform: netgear
-    host: !secret device_tracker_netgear_host
-    username: !secret device_tracker_netgear_username
-    password: !secret device_tracker_netgear_password
-    interval_seconds: 15
-    consider_home: 300
-    new_device_defaults:
-        hide_if_away: true
-        track_new_devices: false
-  - platform: bluetooth_tracker
+wemo:
 
-#Setup so we can track location beyond the house
-mqtt:
-  broker: !secret mqtt_broker
-  port: !secret mqtt_port
-  username: !secret mqtt_username
-  password: !secret mqtt_password
-  certificate: auto
-
-#Set Zones for tracking
-zone:
-  - name: Home
-    latitude: !secret homeassistant_latitude
-    longitude: !secret homeassistant_longitude
-    radius: 100
-  - name: !secret zone_work_name
-    latitude: !secret zone_work_latitude
-    longitude: !secret zone_work_longitude
-    radius: 100
-  - name: !secret zone_gym_name
-    latitude: !secret zone_gym_latitude
-    longitude: !secret zone_gym_longitude
-    radius: 100    
-
-
-#Use person to account for people in household
 person:
 
-#Notification Platform
-notify:
-#  - name: pushbullet
-#    platform: pushbullet
-#    api_key: !secret pushbulletapikey
-
-#Adds support for running Python scripts
 python_script:
-
-
-#Wemo
-wemo:
 
 light:
   - platform: group
-    name: Wes' Room Light
+    name: Bedroom Lamp
     entities:
-      - light.light
-      - light.light_2
+      - light.jerry_floor_1
+      - light.jerry_floor_2
+      - light.jerry_floor_3
+      - light.jerry_floor_4
+      - light.jerry_floor_5
   - platform: group
-    name: Jerry's Floor Lamp
-    entities:
-      - light.jerry_lamp_1
-      - light.jerry_lamp_2
-      - light.jerry_lamp_3
-  - platform: group
-    name: Jerry's Bathroom Lights
+    name: Bathroom Lights
     entities:
       - light.jerry_bathroom_1
       - light.jerry_bathroom_2
   - platform: group
-    name: Jerry's Lights
+    name: Dining Area Lights
     entities:
-      - light.jerry_s_bathroom_lights
-      - light.jerry_color
-      - light.jerry_s_floor_lamp
-      - light.jerry_bedside
+      - light.dining_area_1
+      - light.dining_area_2
+      - light.dining_area_3
 
-#configuration for owntracks
-owntracks:
-  max_gps_accuracy: 200
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+http:
+  base_url: ballisticpotato.duckdns.org:8123
+  ssl_certificate: /ssl/fullchain.pem
+  ssl_key: /ssl/privkey.pem
+  
+# Text to speech
+tts:
+  - platform: google_translate
+
+# Example configuration.yaml entry
+input_datetime:
+  daylight_start_override:
+    name: Daylight Start Override
+    has_date: false
+    has_time: true
+    initial: '7:00:00'
+  daylight_end_override:
+    name: Daylight End Override
+    has_date: false
+    has_time: true
+    initial: '19:00:00'
+
+# LG TV Configuration
+webostv:
+  - name: LG TV
+    host: 192.168.1.133
+    turn_on_action:
+      service: wake_on_lan.send_magic_packet
+      data:
+        mac: "20:17:42:58:13:2A"
+        
+# Wake-on-Lan Switch for Media Server
+switch:
+  - platform: wake_on_lan
+    name: "Media Server"
+    mac: "d4:3d:7e:bd:f2:07"
+    host: 192.168.1.151
+    turn_off:
+      service: hassio.addon_stdin
+      data:
+        addon: a0d7b954_ssh
+        input: "ssh -i /root/.ssh/local_network jerry@192.168.1.151 sudo poweroff"
 
 group: !include groups.yaml
 automation: !include automations.yaml

@@ -1,32 +1,6 @@
-device_tracker.c0eefbf5049c:
-  hidden: true
-device_tracker.jerrylin_pixel2:
-  hidden: true
-device_tracker.404e36834b54:
-  hidden: true
-device_tracker.6c4d7365ea91:
-  hidden: true
-device_tracker.68ef4339078e:
-  hidden: true
-sensor.tradfri_motion_sensor:
-  hidden: true
-sensor.tradfri_remote_control:
-  hidden: true
-light.jerry_bathroom_1:
-  hidden: true
-light.jerry_bathroom_2:
-  hidden: true
-light.jerry_lamp_1:
-  hidden: true
-light.jerry_lamp_2:
-  hidden: true
-light.jerry_lamp_3:
-  hidden: true
-light.light:
-  hidden: true
-light.light_2:
-  hidden: true
-script.notify_change_presence:
-  hidden: true
-device_tracker.oneplus_3t:
-  hidden: true
+device_tracker.6c_4d_73_67_12_22:
+  friendly_name: Miranda's iPhone
+device_tracker.40_4e_36_83_4b_54:
+  friendly_name: Jerry's Pixel 2
+switch.tradfri_outlet_2:
+  friendly_name: Swivel Fan

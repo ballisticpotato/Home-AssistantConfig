@@ -19,3 +19,9 @@ known_devices.yaml
 
 # Ignore the SQLite Database
 *.db
+
+# Ignore SSH folders for local network access
+.ssh/
+
+# Ignore WebOsTV.conf
+webostv.conf

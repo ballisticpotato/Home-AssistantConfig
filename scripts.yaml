@@ -29,3 +29,18 @@
       volume_level: 0.05
     entity_id: media_player.lg_tv
     service: media_player.volume_set
+'1587673845351':
+  alias: Turn Off Everything
+  sequence:
+  - data: {}
+    entity_id:
+    - light.bathroom_lights
+    - light.bedroom_lamp
+    - light.dining_area_lights
+    - light.closet_light
+    - light.entryway_light
+    - light.color_1
+    service: light.turn_off
+  - data: {}
+    entity_id: switch.tradfri_outlet,switch.plant_light,switch.tradfri_outlet_2
+    service: switch.turn_off

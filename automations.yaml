@@ -94,6 +94,7 @@
       entity_id: light.bedroom_lamp
       transition: 600
       brightness_pct: 100
+  - delay: 00:00:03
   - service: automation.turn_on
     entity_id: automation.manual_flux
 - id: fake_home
@@ -165,8 +166,7 @@
     value_template: '{{ states(''sensor.time'') == (state_attr(''input_datetime.daylight_end_override'',
       ''timestamp'') | int | timestamp_custom(''%H:%M'', False)) }}'
   - platform: state
-    entity_id: light.bathroom_lights, light.bedroom_lamp, light.dining_area_lights,
-      light.color_1
+    entity_id: light.bathroom_lights, light.bedroom_lamp, light.dining_area_lights, light.closet_light, light.entryway_light, light.color_1
     from: 'off'
     to: 'on'
   action:

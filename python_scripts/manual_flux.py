@@ -2,7 +2,9 @@ LIGHTS = [
     "light.bathroom_lights",
     "light.bedroom_lamp",
     "light.dining_area_lights",
-    "light.color_1"]
+    "light.color_1",
+    "light.closet_light",
+    "light.entryway_light"]
 
 light = data.get('light')
 
@@ -64,4 +66,3 @@ for light in LIGHTS:
             hass.services.call("light", "turn_on", {"entity_id": light, "brightness_pct": brightness_pct }, False)
             time.sleep(1)
             hass.services.call("light", "turn_on", {"entity_id": light,  "kelvin": temp }, False)
-            time.sleep(1)

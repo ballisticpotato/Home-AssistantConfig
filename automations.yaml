@@ -39,7 +39,6 @@
   - data: {}
     entity_id: script.1581047036822
     service: script.turn_on
-
 - id: wakeup
   alias: Wakeup Lights
   trigger:
@@ -166,7 +165,8 @@
     value_template: '{{ states(''sensor.time'') == (state_attr(''input_datetime.daylight_end_override'',
       ''timestamp'') | int | timestamp_custom(''%H:%M'', False)) }}'
   - platform: state
-    entity_id: light.bathroom_lights, light.bedroom_lamp, light.dining_area_lights, light.closet_light, light.entryway_light, light.color_1
+    entity_id: light.bathroom_lights, light.bedroom_lamp, light.dining_area_lights,
+      light.closet_light, light.entryway_light, light.color_1
     from: 'off'
     to: 'on'
   action:
@@ -189,6 +189,28 @@
   action:
   - service: switch.turn_off
     entity_id: switch.plant_light
+- id: fold_full_power
+  alias: Set Folding@Home to Full
+  trigger:
+  - platform: time
+    at: '22:00:00'
+  action:
+  - service: hassio.addon_stdin
+    data:
+      addon: a0d7b954_ssh
+      input: /root/config/python_scripts/folding_at_home.py --action unpause --power
+        full
+- id: fold_light_power
+  alias: Set Folding@Home to Light
+  trigger:
+  - platform: time
+    at: '10:00:00'
+  action:
+  - service: hassio.addon_stdin
+    data:
+      addon: a0d7b954_ssh
+      input: /root/config/python_scripts/folding_at_home.py --action unpause --power
+        light
 - id: night_light
   alias: Night Light
   trigger:
@@ -207,3 +229,27 @@
     state: 'on'
   action:
   - service: python_script.night_light
+- id: '1591577075422'
+  alias: Dim Dining Area Lights
+  description: ''
+  trigger:
+  - entity_id: media_player.lg_tv
+    from: 'off'
+    platform: state
+    to: 'on'
+  - entity_id: light.dining_area_lights
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: media_player.lg_tv
+    state: 'on'
+  - after: '17:00'
+    condition: time
+  action:
+  - delay: 00:00:03
+  - data:
+      brightness_pct: 10
+    entity_id: light.dining_area_lights
+    service: light.turn_on

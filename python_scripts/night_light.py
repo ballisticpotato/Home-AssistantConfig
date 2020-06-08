@@ -15,6 +15,7 @@ if (hass.states.is_state(ON_LIGHT, "on") and hass.states.is_state(OFF_LIGHTS[0],
     hass.services.call("light", "turn_off", {"entity_id": "light.bedroom_lamp"}, False)
 else:
     hass.services.call("light", "turn_off", {"entity_id": OFF_LIGHTS}, False)
+    time.sleep(1)
     service_data = {
         "entity_id": ON_LIGHT,
         "kelvin": 2200,

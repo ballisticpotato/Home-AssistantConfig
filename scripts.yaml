@@ -14,7 +14,7 @@
     entity_id: automation.manual_flux
     service: automation.turn_off
   - data:
-      brightness: 5
+      brightness: 10
     entity_id: light.dining_area_lights
     service: light.turn_on
   - entity_id: automation.manual_flux

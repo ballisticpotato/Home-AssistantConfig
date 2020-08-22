@@ -25,3 +25,6 @@ known_devices.yaml
 
 # Ignore WebOsTV.conf
 webostv.conf
+
+# Ignore tts recording
+tts/

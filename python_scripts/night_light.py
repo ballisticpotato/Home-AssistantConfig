@@ -1,10 +1,7 @@
 ## Constants
-ON_LIGHT = "light.jerry_floor_2"
+ON_LIGHT = "light.bedroom_2"
 OFF_LIGHTS = [
-    "light.jerry_floor_1",
-    "light.jerry_floor_3",
-    "light.jerry_floor_4",
-    "light.jerry_floor_5"
+    "light.bedroom_1"
 ]
 
 # Turn off the manual_flux automation first

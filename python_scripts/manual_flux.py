@@ -1,6 +1,8 @@
 # CONSTANTS
 LIGHTS = [
-    "light.bathroom_lights",
+    "light.office_lights",
+    "light.family_room_lights",
+    "light.breakfast_area_lights",
     "light.bedroom_lamp",
     "light.dining_area_lights",
     "light.color_1",
@@ -65,7 +67,7 @@ for light in lights_to_adjust:
             time.sleep(1)
             hass.services.call("light", "turn_on", {"entity_id": light, "rgb_color": [255, 0, 0] }, False)
         # Dim the dining area lights if the TV is on and it's after 5PM
-        elif (light == "light.dining_area_lights" and hass.states.get("media_player.lg_tv") == 'on' and datetime.time( 17, 0, 0) < now):
+        elif (light == "light.dining_area_lights" and hass.states.get("media_player.lg_tv") == 'on' and datetime.time(17, 0, 0) < now):
             hass.services.call("light", "turn_on", {"entity_id": light, "brightness_pct": 10 }, False)
             time.sleep(1)
             hass.services.call("light", "turn_on", {"entity_id": light,  "kelvin": temp }, False)

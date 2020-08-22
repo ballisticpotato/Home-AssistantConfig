@@ -40,7 +40,10 @@
     - light.closet_light
     - light.entryway_light
     - light.color_1
+    - light.office_lights
+    - light.family_room_lights
+    - light.breakfast_area_lights
     service: light.turn_off
   - data: {}
-    entity_id: switch.tradfri_outlet,switch.plant_light,switch.tradfri_outlet_2
+    entity_id: switch.espresso_machine,switch.plant_light,switch.family_room_lamp
     service: switch.turn_off

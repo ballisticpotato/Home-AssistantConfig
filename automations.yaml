@@ -14,28 +14,29 @@
   action:
   - data:
       entity_id:
-      - switch.tradfri_outlet
-      - switch.tradfri_outlet_2
+        - switch.espresso_machine
+        - switch.family_room_lamp
+        - switch.plant_light
     service: switch.turn_off
   - data:
-      entity_id: light.dining_area_lights
+      entity_id:
+        - light.dining_area_lights
+        - light.office_lights
+        - light.family_room_lights
+        - light.breakfast_area_lights
     service: light.turn_off
   - delay: 00:00:01
   - service: light.turn_on
     data:
-      entity_id: light.bathroom_lights
-  - delay: 00:00:01
-  - service: light.turn_on
-    data:
       entity_id: light.bedroom_lamp
-  - service: light.turn_on
-    data:
-      brightness_pct: 5
-      entity_id: light.color_1
-      rgb_color:
-      - 255
-      - 0
-      - 0
+#   - service: light.turn_on
+#     data:
+#       brightness_pct: 5
+#       entity_id: light.color_1
+#       rgb_color:
+#       - 255
+#       - 0
+#       - 0
   - data: {}
     entity_id: script.1581047036822
     service: script.turn_on
@@ -58,36 +59,17 @@
   - delay: 00:00:01
   - service: python_script.manual_flux
     data:
-      light: light.jerry_floor_1
+      light: light.bedroom_1
       brightness_pct: 5
   - service: python_script.manual_flux
     data:
-      light: light.bathroom_lights
+      light: light.bedroom_2
       brightness_pct: 25
-  - service: python_script.manual_flux
-    data:
-      light: light.color_1
-      brightness_pct: 100
+#   - service: python_script.manual_flux
+#     data:
+#       light: light.color_1
+#       brightness_pct: 100
   - delay: 00:01:00
-  - service: python_script.manual_flux
-    data:
-      light: light.jerry_floor_2
-      brightness_pct: 5
-  - delay: 00:01:00
-  - service: python_script.manual_flux
-    data:
-      light: light.jerry_floor_3
-      brightness_pct: 5
-  - delay: 00:01:00
-  - service: python_script.manual_flux
-    data:
-      light: light.jerry_floor_4
-      brightness_pct: 5
-  - delay: 00:01:00
-  - service: python_script.manual_flux
-    data:
-      light: light.jerry_floor_5
-      brightness_pct: 5
   - service: python_script.fade_light
     data:
       entity_id: light.bedroom_lamp
@@ -165,8 +147,14 @@
     value_template: '{{ states(''sensor.time'') == (state_attr(''input_datetime.daylight_end_override'',
       ''timestamp'') | int | timestamp_custom(''%H:%M'', False)) }}'
   - platform: state
-    entity_id: light.bathroom_lights, light.bedroom_lamp, light.dining_area_lights,
-      light.closet_light, light.entryway_light, light.color_1
+    entity_id:
+        - light.office_lights
+        - light.bedroom_lamp
+        - light.dining_area_lights
+        - light.family_room_lights
+        - light.entryway_light
+        - light.color_1
+        - light.closet_light
     from: 'off'
     to: 'on'
   action:
@@ -198,19 +186,18 @@
   - service: hassio.addon_stdin
     data:
       addon: a0d7b954_ssh
-      input: /root/config/python_scripts/folding_at_home.py --action unpause --power
+      input: /root/config/scripts/folding_at_home.py --action unpause --power
         full
 - id: fold_light_power
-  alias: Set Folding@Home to Light
+  alias: Set Folding@Home to Off
   trigger:
   - platform: time
-    at: '10:00:00'
+    at: '8:00:00'
   action:
   - service: hassio.addon_stdin
     data:
       addon: a0d7b954_ssh
-      input: /root/config/python_scripts/folding_at_home.py --action unpause --power
-        light
+      input: /root/config/scripts/folding_at_home.py --action pause
 - id: night_light
   alias: Night Light
   trigger:
@@ -233,7 +220,7 @@
   alias: Dim Dining Area Lights
   description: ''
   trigger:
-  - entity_id: media_player.lg_tv
+  - entity_id: media_player.lg_tv_2
     from: 'off'
     platform: state
     to: 'on'
@@ -243,13 +230,48 @@
     to: 'on'
   condition:
   - condition: state
-    entity_id: media_player.lg_tv
+    entity_id: media_player.lg_tv_2
     state: 'on'
   - after: '17:00'
     condition: time
+  - condition: state
+    entity_id: light.dining_area_lights
+    state: 'on'
   action:
   - delay: 00:00:03
   - data:
       brightness_pct: 10
     entity_id: light.dining_area_lights
     service: light.turn_on
+- id: warm_up_espresso_machine
+  alias: Warm Up the Espresso Machine
+  trigger:
+    - platform: time
+      at: '06:00:00'
+  condition:
+    - condition: time
+      weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - fri
+  action:
+    - service: switch.turn_on
+      entity_id: switch.espresso_machine
+- id: turn_off_espresso_machine
+  alias: Turn Off the Espresso Machine
+  trigger:
+    - platform: time
+      at: '08:00:00'
+  condition:
+    - condition: time
+      weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - fri
+  action:
+    - service: switch.turn_off
+      entity_id: switch.espresso_machine

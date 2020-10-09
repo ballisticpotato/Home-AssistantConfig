@@ -20,10 +20,16 @@
     service: switch.turn_off
   - data:
       entity_id:
-        - light.dining_area_lights
         - light.office_lights
-        - light.family_room_lights
         - light.breakfast_area_lights
+    service: light.turn_off
+  - delay: 00:00:01
+  - data:
+      entity_id: light.dining_area_lights
+    service: light.turn_off
+  - delay: 00:00:01
+  - data:
+      entity_id: light.family_room_lights
     service: light.turn_off
   - delay: 00:00:01
   - service: light.turn_on
@@ -151,6 +157,7 @@
         - light.office_lights
         - light.bedroom_lamp
         - light.dining_area_lights
+        - light.breakfast_area_lights
         - light.family_room_lights
         - light.entryway_light
         - light.color_1
@@ -263,7 +270,7 @@
   alias: Turn Off the Espresso Machine
   trigger:
     - platform: time
-      at: '08:00:00'
+      at: '07:30:00'
   condition:
     - condition: time
       weekday:

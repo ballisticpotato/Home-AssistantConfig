@@ -9,7 +9,7 @@ parser.add_argument('--action', choices=['pause','unpause'])
 parser.add_argument('--power', choices=['light', 'medium', 'full'])
 args = parser.parse_args()
 
-with Telnet('192.168.1.72', 36330) as tn:
+with Telnet('192.168.1.71', 36330) as tn:
     tn.read_until(b'Folding@home')
     tn.write(b'auth jerry\n')
     tn.expect([b'OK'])

@@ -49,10 +49,10 @@ elif(WAKEUP_TIME < now and sun_is_rising):
     brightness_pct = 50
 elif(now < WARM_GLOW_MORNING or WARM_GLOW_EVENING < now):
     temp = 2200
-    brightness_pct = 25
+    brightness_pct = 50
 else:
     temp = 2700
-    brightness_pct = 50
+    brightness_pct = 75
 
 # Loop through all the lights to adjust
 for light in lights_to_adjust:

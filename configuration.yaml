@@ -33,6 +33,8 @@ system_health:
 
 wake_on_lan:
 
+mobile_app:
+
 sensor:
   - platform: yr
     name: Weather
@@ -140,7 +142,7 @@ switch:
   - platform: wake_on_lan
     name: "Media Server"
     mac: "d4:3d:7e:bd:f2:07"
-    host: 192.168.1.151
+    host: 192.168.1.91
     turn_off:
       service: hassio.addon_stdin
       data:

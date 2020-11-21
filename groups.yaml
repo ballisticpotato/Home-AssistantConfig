@@ -1,0 +1,6 @@
+all_switches:
+  name: All Switches
+  entities:
+    - switch.espresso_machine
+    - switch.family_room_lamp
+    - switch.plant_light

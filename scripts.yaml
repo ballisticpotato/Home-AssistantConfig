@@ -23,27 +23,19 @@
   alias: Quiet TV
   sequence:
   - condition: state
-    entity_id: media_player.lg_tv
+    entity_id: media_player.lg_tv_2
     state: '''on'''
   - data:
       volume_level: 0.05
-    entity_id: media_player.lg_tv
+    entity_id: media_player.lg_tv_2
     service: media_player.volume_set
 '1587673845351':
   alias: Turn Off Everything
   sequence:
   - data: {}
     entity_id:
-    - light.bathroom_lights
-    - light.bedroom_lamp
-    - light.dining_area_lights
-    - light.closet_light
-    - light.entryway_light
-    - light.color_1
-    - light.office_lights
-    - light.family_room_lights
-    - light.breakfast_area_lights
+    - light.all_lights
     service: light.turn_off
   - data: {}
-    entity_id: switch.espresso_machine,switch.plant_light,switch.family_room_lamp
+    entity_id: group.all_switches
     service: switch.turn_off

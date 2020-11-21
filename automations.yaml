@@ -12,25 +12,13 @@
     - wed
     - thu
   action:
-  - data:
-      entity_id:
-        - switch.espresso_machine
-        - switch.family_room_lamp
-        - switch.plant_light
-    service: switch.turn_off
-  - data:
-      entity_id:
-        - light.office_lights
-        - light.breakfast_area_lights
-    service: light.turn_off
+  - service: switch.turn_off
+    data:
+      entity_id: group.all_switches
   - delay: 00:00:01
-  - data:
-      entity_id: light.dining_area_lights
-    service: light.turn_off
-  - delay: 00:00:01
-  - data:
-      entity_id: light.family_room_lights
-    service: light.turn_off
+  - service: light.turn_off
+    data:
+      entity_id: light.all_lights
   - delay: 00:00:01
   - service: light.turn_on
     data:
@@ -101,10 +89,23 @@
   action:
   - service: automation.turn_off
     entity_id: automation.leave_home
+  - service: automation.turn_on
+    entity_id: automation.fake_living_room
   - service: light.turn_off
-    entity_id: group.all_lights
+    entity_id: light.all_lights
   - service: switch.turn_off
     entity_id: group.all_switches
+- id: fake_living_room
+  alias: Fake in Living Room
+  trigger:
+    - platform: numeric_state
+      entity_id: sun.sun
+      value_template: '{{ state.attributes.elevation }}'
+      below: -6
+  action:
+    - service: light.turn_on
+      data:
+        entity_id: light.family_room_lights
 - id: leave_home
   alias: Leave Home
   trigger:
@@ -119,7 +120,7 @@
     at: '9:00:00'
   action:
   - service: light.turn_off
-    entity_id: group.all_lights
+    entity_id: light.all_lights
   - service: switch.turn_off
     entity_id: group.all_switches
 - id: autorestart

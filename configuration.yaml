@@ -104,6 +104,19 @@ light:
     entities:
       - light.office_1
       - light.office_2
+  - platform: group
+    name: All Lights
+    entities:
+      - light.office_1
+      - light.office_2
+      - light.family_room_1
+      - light.family_room_2
+      - light.dining_area_1
+      - light.dining_area_2
+      - light.breakfast_area_1
+      - light.breakfast_area_2
+      - light.bedroom_1
+      - light.bedroom_2
 
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
 http:

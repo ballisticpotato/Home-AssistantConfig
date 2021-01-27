@@ -36,12 +36,6 @@ wake_on_lan:
 mobile_app:
 
 sensor:
-  - platform: yr
-    name: Weather
-    monitored_conditions:
-      - symbol
-      - temperature
-      - humidity
   - platform: systemmonitor
     resources:
       - type: processor_use
@@ -53,7 +47,6 @@ sensor:
       - type: last_boot
   - platform: uptime
     name: Uptime
-    unit_of_measurement: hours
   - platform: time_date
     display_options:
       - 'time'
@@ -120,7 +113,6 @@ light:
 
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
 http:
-  base_url: ballisticpotato.duckdns.org:8123
   ssl_certificate: /ssl/fullchain.pem
   ssl_key: /ssl/privkey.pem
   
@@ -160,7 +152,7 @@ switch:
       service: hassio.addon_stdin
       data:
         addon: a0d7b954_ssh
-        input: "ssh -i /root/.ssh/local_network jerry@192.168.1.151 sudo poweroff"
+        input: "ssh -i /root/.ssh/local_network jerry@192.168.1.91 sudo poweroff"
 
 group: !include groups.yaml
 automation: !include automations.yaml

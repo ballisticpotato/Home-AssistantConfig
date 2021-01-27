@@ -98,10 +98,12 @@
 - id: fake_living_room
   alias: Fake in Living Room
   trigger:
-    - platform: numeric_state
-      entity_id: sun.sun
-      value_template: '{{ state.attributes.elevation }}'
-      below: -6
+    - platform: sun
+      event: sunrise
+      offset: "+00:30:00"
+    - platform: sun
+      event: sunset
+      offset: "+00:30:00"
   action:
     - service: light.turn_on
       data:
@@ -283,3 +285,21 @@
   action:
     - service: switch.turn_off
       entity_id: switch.espresso_machine
+
+- id: turn_on_christmas_tree
+  alias: Light up Christmas Tree
+  trigger:
+    - platform: time
+      at: '17:00:00'
+  action:
+    - service: switch.turn_on
+      entity_id: switch.family_room_lamp
+- id: turn_off_christmas_tree
+  alias: Turn Off Christmas tree
+  trigger:
+    - platform: time
+      at: '23:00:00'
+  action:
+    - service: switch.turn_off
+      entity_id: switch.family_room_lamp
+

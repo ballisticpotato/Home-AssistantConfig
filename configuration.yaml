@@ -53,19 +53,11 @@ sensor:
       - 'date'
       - 'date_time_iso'
 
-asuswrt:
-    host: 192.168.1.70
-    username: !secret router_username
-    ssh_key: /config/.ssh/asuswrt
-
-device_tracker:
-    - platform: asuswrt
-      new_device_defaults:
-        track_new_devices: false
+wemo:
+    static:
+        - 192.168.1.128
 
 cloud:
-
-wemo:
 
 person:
 
@@ -131,12 +123,12 @@ input_datetime:
     name: Daylight End Override
     has_date: false
     has_time: true
-    initial: '19:00:00'
+    initial: '19:30:00'
 
 # LG TV Configuration
 webostv:
   - name: LG TV
-    host: 192.168.1.133
+    host: 192.168.1.186
     turn_on_action:
       service: wake_on_lan.send_magic_packet
       data:

@@ -15,10 +15,12 @@ known_devices.yaml
 .uuid
 
 # Ignore Logs
-*.log
+*.log*
 
 # Ignore the SQLite Database
 *.db
+*.db-shm
+*.db-wal
 
 # Ignore SSH folders for local network access
 .ssh/
@@ -28,3 +30,6 @@ webostv.conf
 
 # Ignore tts recording
 tts/
+
+# Ignore Community Blueprints
+blueprints/

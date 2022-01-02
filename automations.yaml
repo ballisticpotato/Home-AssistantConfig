@@ -23,14 +23,6 @@
   - service: light.turn_on
     data:
       entity_id: light.bedroom_lamp
-#   - service: light.turn_on
-#     data:
-#       brightness_pct: 5
-#       entity_id: light.color_1
-#       rgb_color:
-#       - 255
-#       - 0
-#       - 0
   - data: {}
     entity_id: script.1581047036822
     service: script.turn_on
@@ -59,10 +51,6 @@
     data:
       light: light.bedroom_2
       brightness_pct: 25
-#   - service: python_script.manual_flux
-#     data:
-#       light: light.color_1
-#       brightness_pct: 100
   - delay: 00:01:00
   - service: python_script.fade_light
     data:
@@ -98,16 +86,16 @@
 - id: fake_living_room
   alias: Fake in Living Room
   trigger:
-    - platform: sun
-      event: sunrise
-      offset: "+00:30:00"
-    - platform: sun
-      event: sunset
-      offset: "+00:30:00"
+  - platform: sun
+    event: sunrise
+    offset: +00:30:00
+  - platform: sun
+    event: sunset
+    offset: +00:30:00
   action:
-    - service: light.turn_on
-      data:
-        entity_id: light.family_room_lights
+  - service: light.turn_on
+    data:
+      entity_id: light.family_room_lights
 - id: leave_home
   alias: Leave Home
   trigger:
@@ -134,6 +122,7 @@
     at: '16:00:00'
   action:
   - service: homeassistant.restart
+  mode: single
 - id: manual_flux
   alias: Manual Flux
   trigger:
@@ -157,14 +146,14 @@
       ''timestamp'') | int | timestamp_custom(''%H:%M'', False)) }}'
   - platform: state
     entity_id:
-        - light.office_lights
-        - light.bedroom_lamp
-        - light.dining_area_lights
-        - light.breakfast_area_lights
-        - light.family_room_lights
-        - light.entryway_light
-        - light.color_1
-        - light.closet_light
+    - light.office_lights
+    - light.bedroom_lamp
+    - light.dining_area_lights
+    - light.breakfast_area_lights
+    - light.family_room_lights
+    - light.entryway_light
+    - light.color_1
+    - light.closet_light
     from: 'off'
     to: 'on'
   action:
@@ -175,7 +164,7 @@
   alias: Plant Light On
   trigger:
   - platform: time
-    at: '9:00:00'
+    at: '7:00:00'
   action:
   - service: switch.turn_on
     entity_id: switch.plant_light
@@ -183,7 +172,7 @@
   alias: Plant Light Off
   trigger:
   - platform: time
-    at: '17:00:00'
+    at: '19:00:00'
   action:
   - service: switch.turn_off
     entity_id: switch.plant_light
@@ -196,8 +185,7 @@
   - service: hassio.addon_stdin
     data:
       addon: a0d7b954_ssh
-      input: /root/config/scripts/folding_at_home.py --action unpause --power
-        full
+      input: /root/config/scripts/folding_at_home.py --action unpause --power full
 - id: fold_light_power
   alias: Set Folding@Home to Off
   trigger:
@@ -256,50 +244,48 @@
 - id: warm_up_espresso_machine
   alias: Warm Up the Espresso Machine
   trigger:
-    - platform: time
-      at: '06:00:00'
+  - platform: time
+    at: 06:00:00
   condition:
-    - condition: time
-      weekday:
-        - mon
-        - tue
-        - wed
-        - thu
-        - fri
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
   action:
-    - service: switch.turn_on
-      entity_id: switch.espresso_machine
+  - service: switch.turn_on
+    entity_id: switch.espresso_machine
 - id: turn_off_espresso_machine
   alias: Turn Off the Espresso Machine
   trigger:
-    - platform: time
-      at: '07:30:00'
+  - platform: time
+    at: 07:30:00
   condition:
-    - condition: time
-      weekday:
-        - mon
-        - tue
-        - wed
-        - thu
-        - fri
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
   action:
-    - service: switch.turn_off
-      entity_id: switch.espresso_machine
-
+  - service: switch.turn_off
+    entity_id: switch.espresso_machine
 - id: turn_on_christmas_tree
   alias: Light up Christmas Tree
   trigger:
-    - platform: time
-      at: '17:00:00'
+  - platform: time
+    at: '17:00:00'
   action:
-    - service: switch.turn_on
-      entity_id: switch.family_room_lamp
+  - service: switch.turn_on
+    entity_id: switch.family_room_lamp
 - id: turn_off_christmas_tree
   alias: Turn Off Christmas tree
   trigger:
-    - platform: time
-      at: '23:00:00'
+  - platform: time
+    at: '23:00:00'
   action:
-    - service: switch.turn_off
-      entity_id: switch.family_room_lamp
-
+  - service: switch.turn_off
+    entity_id: switch.family_room_lamp
